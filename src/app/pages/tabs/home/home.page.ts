@@ -46,6 +46,7 @@ export class HomePage implements OnInit, AfterContentChecked {
     });
   }
 
+
   ngAfterContentChecked() {
     this.bannerConfig = {
       slidesPerView: 1.2,

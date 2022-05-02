@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,12 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit {
+  constructor(private auth: AuthService, private router: Router) {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-  goTo(){
+  ngOnInit() {}
+  goTo() {
     console.error('this works');
+  }
+  logOut() {
+    this.auth.logout().then(() => {
+      this.router.navigateByUrl('/auth-screen', { replaceUrl: true });
+    });
+    console.log('log out');
   }
 }
