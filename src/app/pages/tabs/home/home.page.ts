@@ -1,3 +1,4 @@
+import { AuthService } from './../../../services/auth/auth.service';
 import { AfterContentChecked, Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 // import Swiper core and required modules
@@ -6,14 +7,12 @@ import SwiperCore, { SwiperOptions, Autoplay, Pagination } from 'swiper';
 SwiperCore.use([Autoplay, Pagination]);
 import { ApiService } from './../../../services/api/api.service';
 import { PopoverComponent } from './popover/popover.component';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit, AfterContentChecked {
-
   loc = 'Location';
   banners: any[] = [];
   categories: any[] = [];
@@ -24,8 +23,11 @@ export class HomePage implements OnInit, AfterContentChecked {
   categoryConfig: SwiperOptions;
   restaurantConfig: SwiperOptions;
 
-  constructor(public popoverController: PopoverController,
-    private api: ApiService) { }
+  constructor(
+    public popoverController: PopoverController,
+    private api: ApiService,
+    private auth: AuthService
+  ) {}
 
   ngOnInit() {
     this.banners = [
@@ -39,6 +41,9 @@ export class HomePage implements OnInit, AfterContentChecked {
     // eslint-disable-next-line radix
     this.offers = offers.sort((a, b) => parseInt(b.id) - parseInt(a.id));
     this.nearby = this.api.allRestaurants;
+    this.auth.getOrders().subscribe(res => {
+      console.log(res);
+    });
   }
 
   ngAfterContentChecked() {
@@ -48,16 +53,15 @@ export class HomePage implements OnInit, AfterContentChecked {
       centeredSlides: true,
       initialSlide: this.banners?.length > 1 ? 1 : 0,
       autoplay: {
-        delay: 3000
+        delay: 3000,
       },
-      pagination: { clickable: true }
+      pagination: { clickable: true },
     };
     this.categoryConfig = {
-      slidesPerView: 3.5
+      slidesPerView: 3.5,
     };
     this.restaurantConfig = {
-      slidesPerView: 1.1
+      slidesPerView: 1.1,
     };
   }
-
 }

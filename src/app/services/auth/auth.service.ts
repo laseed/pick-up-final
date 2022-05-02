@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { 
-  Auth, createUserWithEmailAndPassword, 
+import {
+  Auth, createUserWithEmailAndPassword,
   onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { collectionData, doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { collection } from 'firebase/firestore';
 import { StorageService } from '../storage.service';
 
 export const user_key = 'maza_eats_user_id';
@@ -58,7 +59,7 @@ export class AuthService {
         console.log(user);
         if(user) resolve(true);
         resolve(false);
-      }); 
+      });
     });
   }
 
@@ -70,5 +71,10 @@ export class AuthService {
     } catch(e) {
       throw(e);
     }
+  }
+
+  getOrders(){
+    const orderRef = collection(this._firestore, 'order');
+    return collectionData(orderRef, {idField: 'orderID'});
   }
 }

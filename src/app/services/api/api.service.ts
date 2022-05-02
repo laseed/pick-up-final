@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/quotes */
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -101,7 +103,7 @@ export class ApiService {
     {
       category_id: "1",
       cover: "assets/dishes/nan.jpg",
-      desc: "",
+      desc: "Paneer",
       id: "4",
       name: "Nan Paneer",
       price: 200,

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
-
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
@@ -21,4 +20,7 @@ import { PopoverComponent } from './popover/popover.component';
   ],
   declarations: [HomePage, PopoverComponent]
 })
-export class HomePageModule {}
+
+export class HomePageModule {
+
+}
