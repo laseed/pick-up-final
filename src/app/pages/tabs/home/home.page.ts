@@ -23,26 +23,36 @@ export class HomePage implements OnInit, AfterContentChecked {
   categoryConfig: SwiperOptions;
   restaurantConfig: SwiperOptions;
 
+
   constructor(
     public popoverController: PopoverController,
     private api: ApiService,
-    private auth: AuthService
-  ) {}
+    private service: AuthService
+  ) { }
 
   ngOnInit() {
-    this.banners = [
-      { banner: 'assets/dishes/11.jpeg' },
-      { banner: 'assets/dishes/3.jpg' },
-      { banner: 'assets/dishes/cab.jpg' },
-    ];
-    this.categories = this.api.categories;
-    this.favorites = this.api.allRestaurants;
-    const offers = [...this.api.allRestaurants];
-    // eslint-disable-next-line radix
-    this.offers = offers.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-    this.nearby = this.api.allRestaurants;
-    this.auth.getOrders().subscribe(res => {
+    //this.banners = [
+    //  { banner: 'assets/dishes/11.jpeg' },
+    //  { banner: 'assets/dishes/3.jpg' },
+    //  { banner: 'assets/dishes/cab.jpg' },
+    //];
+    //this.categories = this.api.categories;
+    //this.favorites = this.api.allRestaurants;
+    //console.log(this.favorites);
+
+    this.service.getCategories().subscribe(res => {
       console.log(res);
+      this.categories = res;
+    });
+    this.service.getRestaurant().subscribe(res => {
+      console.log(res);
+      this.favorites = res;
+      if (this.favorites != []) {
+        const offers = [...this.favorites];
+        this.offers = offers.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        this.nearby = this.favorites;
+      }
+
     });
   }
 

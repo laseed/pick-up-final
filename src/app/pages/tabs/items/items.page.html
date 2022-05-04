@@ -8,12 +8,12 @@
         <ion-icon slot="icon-only" size="small" name="heart-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ restaurant?.name }}</ion-title>
+    <ion-title *ngIf="restaurant != null">{{ restaurant?.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+<ng-container *ngIf="restaurant != null" >
   <div class="bg-image" [style.background-image]="'url(' + restaurant?.cover + ')'"></div>
 
   <ion-grid>
@@ -40,6 +40,7 @@
   </ion-grid>
 
   <ion-list *ngFor="let category of categories">
+    <ng-container *ngIf="category != null ">
     <ion-list-header>
       <ion-label>{{category?.name}}</ion-label>
     </ion-list-header>
@@ -55,6 +56,7 @@
         </ion-thumbnail>
       </ion-item>
     </ng-container>
+  </ng-container>
   </ion-list>
-
+</ng-container>
 </ion-content>

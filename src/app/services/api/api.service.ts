@@ -135,7 +135,7 @@ export class ApiService {
       price: 160,
       rating: 0,
       status: true,
-      uid: "1",
+      uid: "2",
       variation: false,
       veg: true
     },
@@ -200,7 +200,7 @@ export class ApiService {
       price: 120,
       rating: 0,
       status: true,
-      uid: "1",
+      uid: "3",
       variation: false,
       veg: true
     },

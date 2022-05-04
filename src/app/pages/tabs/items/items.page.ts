@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { ApiService } from './../../../services/api/api.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +20,8 @@ export class ItemsPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private route: ActivatedRoute,
-    private api: ApiService
+    private api: ApiService,
+    private service: AuthService
   ) { }
 
   ngOnInit() {
@@ -29,8 +31,8 @@ export class ItemsPage implements OnInit {
 
   getId() {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
-    if(!id) {
+    // console.log(id);
+    if (!id) {
       this.navCtrl.back();
       return;
     }
@@ -38,10 +40,22 @@ export class ItemsPage implements OnInit {
   }
 
   getData() {
-    this.restaurant = this.api.allRestaurants.find(x => x.id == this.id);
-    this.categories = this.api.categories;
-    this.items = [...this.api.allItems].filter(x => x.uid == this.id);
-    console.log(this.items);
+    this.service.getRestaurantById(this.id).subscribe(res => {
+      console.log(res);
+      this.restaurant = res;
+    });
+    this.service.getCategories().subscribe(res => {
+      console.log(res);
+      this.categories = res;
+    });
+    this.service.getItems().subscribe(res => {
+      console.log(res);
+      this.items = [...res].filter(x => x.uid == this.id);
+    })
+    //this.restaurant = this.api.allRestaurants.find(x => x.id == this.id);
+    //this.categories = this.api.categories;
+    // this.items = [...this.api.allItems].filter(x => x.uid == this.id);
+    // console.log(this.items);
   }
 
   getCuisines(data) {

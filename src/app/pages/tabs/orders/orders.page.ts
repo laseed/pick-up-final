@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { ApiService } from './../../../services/api/api.service';
 import { AfterContentChecked, Component, OnInit } from '@angular/core';
 
@@ -17,7 +18,9 @@ export class OrdersPage implements OnInit, AfterContentChecked {
   bannerConfig: SwiperOptions;
   categoryConfig: SwiperOptions;
   restaurantConfig: SwiperOptions;
-  constructor(private api: ApiService) { }
+  orders = [];
+  constructor(private api: ApiService,
+    private service: AuthService) { }
 
   ngOnInit() {
     this.banners = [
@@ -26,6 +29,11 @@ export class OrdersPage implements OnInit, AfterContentChecked {
       { banner: 'assets/dishes/cab.jpg' },
     ];
     this.favorites = this.api.allRestaurants;
+
+    this.service.getOrders().subscribe(res => {
+      console.log(res);
+      this.orders = res;
+    });
   }
   ngAfterContentChecked() {
     this.bannerConfig = {
