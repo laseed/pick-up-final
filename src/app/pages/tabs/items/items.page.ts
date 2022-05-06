@@ -1,8 +1,7 @@
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { ApiService } from './../../../services/api/api.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { threadId } from 'worker_threads';
 
 @Component({
@@ -11,22 +10,24 @@ import { threadId } from 'worker_threads';
   styleUrls: ['./items.page.scss'],
 })
 export class ItemsPage implements OnInit {
-
   id: any;
   restaurant: any;
   categories: any[] = [];
   items: any[] = [];
-
+  cat_item: any[] = [];
+  cart: any[];
   constructor(
     private navCtrl: NavController,
     private route: ActivatedRoute,
-    private api: ApiService,
-    private service: AuthService
+    private service: AuthService,
+    public alertController: AlertController
   ) { }
 
   ngOnInit() {
     this.getId();
     this.getData();
+    this.cart = null;
+    console.log(this.cart);
   }
 
   getId() {
@@ -40,26 +41,34 @@ export class ItemsPage implements OnInit {
   }
 
   getData() {
-    this.service.getRestaurantById(this.id).subscribe(res => {
+    this.service.getRestaurantById(this.id).subscribe((res) => {
       console.log(res);
       this.restaurant = res;
     });
-    this.service.getCategories().subscribe(res => {
+    this.service.getItems().subscribe((res) => {
       console.log(res);
-      this.categories = res;
+      this.items = [...res].filter((x) => x.uid == this.id);
+      if (this.items != [])
+        this.items.forEach((val) => {
+          this.cat_item.push(val.category_id);
+        });
+      //console.log(this.cat_item);
     });
-    this.service.getItems().subscribe(res => {
-      console.log(res);
-      this.items = [...res].filter(x => x.uid == this.id);
-    })
-    //this.restaurant = this.api.allRestaurants.find(x => x.id == this.id);
-    //this.categories = this.api.categories;
-    // this.items = [...this.api.allItems].filter(x => x.uid == this.id);
-    // console.log(this.items);
+    this.service.getCategories().subscribe((res1) => {
+      console.log(res1);
+      [...res1].forEach(
+        (val) => this.cat_item.includes(val.id) && this.categories.push(val)
+      );
+      console.log(this.categories);
+    });
   }
 
   getCuisines(data) {
     return data.join(', ');
   }
+  addToCart(item) {
+    if (this.cart == null) this.cart = [];
+    this.cart.push(item);
 
+  }
 }
