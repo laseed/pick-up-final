@@ -10,6 +10,8 @@ export class Item {
   uid: string;
   variation: boolean;
   veg: boolean;
+  qty: number = 1 ;
   Item() {
+    this.qty = 1;
   }
 }

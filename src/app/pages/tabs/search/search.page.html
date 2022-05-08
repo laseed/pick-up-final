@@ -5,23 +5,26 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar></ion-searchbar>
-  <ion-list *ngFor="let category of categories">
-    <ion-list-header>
-      <ion-label>{{category?.name}}</ion-label>
-    </ion-list-header>
-    <ng-container *ngFor="let item of items">
-      <ion-item *ngIf="category?.id == item?.category_id" lines="full">
+  <ion-searchbar [(ngModel)]="searchTerm"></ion-searchbar>
+  <ion-list>
+
+    <ng-container *ngFor="let item of items |filter: searchTerm">
+      <ion-item lines="full" (click)="goToRest(item)">
         <ion-label>
           <ion-text class="item">{{item?.name}}</ion-text>
-          <p class="price"><ion-text color="dark">₹{{item?.price}}</ion-text></p>
-          <p *ngIf="item?.desc" class="ion-text-wrap ion-text-justify">{{item?.desc}}</p>
+          <p class="price">
+            <ion-text color="dark">{{item?.price}} BD</ion-text>
+          </p>
+          <p *ngIf="item?.desc" class="ion-text-wrap ion-text-justify">
+            {{item?.desc}}
+          </p>
         </ion-label>
         <ion-thumbnail slot="end" *ngIf="item?.cover">
           <ion-img [src]="item?.cover"></ion-img>
         </ion-thumbnail>
       </ion-item>
     </ng-container>
+
   </ion-list>
 
 </ion-content>

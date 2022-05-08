@@ -1,9 +1,46 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Cart</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{restaurant.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ng-container *ngFor="let item of items">
+    <ion-item lines="full">
+      <ion-label>
+        <ion-text class="item">{{item?.name}}</ion-text>
+        <p class="price">
+          <ion-text color="dark">{{item?.price}} BD</ion-text>
+        </p>
 
+      </ion-label>
+      <ion-col col-6 class="calculation" width-25>
+        <button class="add-btn" clear (click)="decrementQty(item)">
+          <ion-icon name="remove-circle"></ion-icon>
+        </button>
+        <span>{{item.qty}}</span>
+        <button class="add-btn" clear (click)="incrementQty(item)">
+          <ion-icon name="add-circle"></ion-icon>
+        </button>
+      </ion-col>
+      <ion-thumbnail slot="end" *ngIf="item?.cover">
+        <ion-img [src]="item?.cover"></ion-img>
+      </ion-thumbnail>
+    </ion-item>
+  </ng-container>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-card>
+      <ion-item>
+        <ion-label>
+          {{amount}} BD
+        </ion-label>
+      </ion-item>
+    </ion-card>
+    <ion-button expand="block" style="margin: 8px" (click)="order()" color="primary">Order</ion-button>
+  </ion-toolbar>
+</ion-footer>

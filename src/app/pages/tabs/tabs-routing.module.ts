@@ -1,6 +1,6 @@
+import { DataResolverService } from './../../services/data-resolver.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
@@ -21,10 +21,7 @@ const routes: Routes = [
         path: 'search',
         loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule)
       },
-      {
-        path: 'cart',
-        loadChildren: () => import('./cart/cart.module').then( m => m.CartPageModule)
-      },
+
       {
         path: 'orders',
         loadChildren: () => import('./orders/orders.module').then( m => m.OrdersPageModule)
@@ -39,6 +36,7 @@ const routes: Routes = [
     path: 'restaurants/:id',
     loadChildren: () => import('./items/items.module').then( m => m.ItemsPageModule)
   },
+
 ];
 
 @NgModule({

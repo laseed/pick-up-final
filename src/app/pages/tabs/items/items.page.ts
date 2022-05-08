@@ -1,8 +1,9 @@
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
 import { threadId } from 'worker_threads';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-items',
@@ -20,13 +21,14 @@ export class ItemsPage implements OnInit {
     private navCtrl: NavController,
     private route: ActivatedRoute,
     private service: AuthService,
-    public alertController: AlertController
-  ) { }
+    public alertController: AlertController,
+    private router: Router,
+    private dataService: StorageService
+  ) {}
 
   ngOnInit() {
     this.getId();
     this.getData();
-    this.cart = null;
     console.log(this.cart);
   }
 
@@ -69,6 +71,15 @@ export class ItemsPage implements OnInit {
   addToCart(item) {
     if (this.cart == null) this.cart = [];
     this.cart.push(item);
+  }
+  viewCart() {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        cart: this.cart,
+        rest: this.restaurant
+      }
+    };
+    this.router.navigate(['cart'], navigationExtras);
 
   }
 }

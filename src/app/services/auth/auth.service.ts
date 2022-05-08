@@ -17,6 +17,8 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  query,
+  where,
 } from '@angular/fire/firestore';
 import { StorageService } from '../storage.service';
 import { updateDoc } from 'firebase/firestore';
@@ -100,19 +102,19 @@ export class AuthService {
   getCategories(): Observable<Category[]> {
     const ref = collection(this._firestore, 'category');
     return collectionData(ref, { idField: 'id' }) as Observable<
-    Category[]
+      Category[]
     >;
   }
   getItems(): Observable<Item[]> {
     const ref = collection(this._firestore, 'item');
     return collectionData(ref, { idField: 'id' }) as Observable<
-    Item[]
+      Item[]
     >;
   }
   getRestaurant(): Observable<Restaurant[]> {
     const ref = collection(this._firestore, 'restaurant');
     return collectionData(ref, { idField: 'id' }) as Observable<
-    Restaurant[]
+      Restaurant[]
     >;
   }
   getRestaurantById(id): Observable<Restaurant[]> {
@@ -126,13 +128,18 @@ export class AuthService {
       Order[]
     >;
   }
-  getOrderById(id): Observable<Order[]> {
-    const orderRef = doc(this._firestore, 'order/' + id);
-    return docData(orderRef, { idField: 'orderID' }) as Observable<Order[]>;
+  getOrderById(id) {
+
+    return query(collection(this._firestore, 'order' ), where("user_id", "==", id));
   }
   addOrder(order: Order) {
-    const orderRef = collection(this._firestore, 'order');
-    return addDoc(orderRef, order);
+    const orderRef = doc(collection(this._firestore, 'order'));
+    return setDoc(orderRef, {
+      orderCost: order.orderCost,
+      items: order.items,
+      user_id: order.user_id,
+      rest: order.rest
+    });
   }
   deleteOrderById(order: Order) {
     const orderRef = doc(this._firestore, 'order/' + order.id);
@@ -141,5 +148,11 @@ export class AuthService {
   updateOrderById(order: Order) {
     const orderRef = doc(this._firestore, 'order/' + order.id);
     return updateDoc(orderRef, { id: order.id, orderCost: order.orderCost });
+  }
+  search(name) {
+    const ref = collection(this._firestore, "item");
+
+    // Create a query against the collection.
+    return query(ref, where("name", "==", name));
   }
 }

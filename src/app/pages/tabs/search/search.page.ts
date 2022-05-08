@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './../../../services/api/api.service';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-search',
@@ -13,27 +14,48 @@ export class SearchPage implements OnInit {
   restaurant: any;
   categories: any[] = [];
   items: any[] = [];
-
-  constructor( private navCtrl: NavController,
+  items_list: any[] = [];
+  cat_item: any[] = [];
+  searchTerm:string = "";
+  constructor(private navCtrl: NavController,
     private route: ActivatedRoute,
-    private api: ApiService) { }
+    private service: AuthService,
+    public toastController: ToastController) { }
 
-    ngOnInit() {
-      this.getData();
-    }
+  ngOnInit() {
+    this.getData();
+    console.log(this.searchTerm );
+
+  }
 
 
 
-    getData() {
-      this.restaurant = this.api.allRestaurants;
-      this.categories = this.api.categories;
-      this.items = [...this.api.allItems];
-      console.log(this.items);
-    }
+  getData() {
+    this.service.getItems().subscribe((res) => {
+      console.log(res);
+      this.items = [...res];
 
-    getCuisines(data) {
-      return data.join(', ');
-    }
+
+      //console.log(this.cat_item);
+    });
+
+
+
+
+  }
+  //search() {
+  //  this.items = this.items_list.filter(val => val.name == '%'+this.searchTerm+'%');
+  //}
+  async goToRest(item) {
+    const toast = await this.toastController.create({
+      message: 'work in progress!',
+      duration: 2000
+    });
+    toast.present();
+  }
+  getCuisines(data) {
+    return data.join(', ');
+  }
 
 
 

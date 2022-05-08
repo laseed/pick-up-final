@@ -21,11 +21,7 @@ export class OrdersPage implements OnInit, AfterContentChecked {
   constructor(private service: AuthService) {}
 
   ngOnInit() {
-    this.banners = [
-      { banner: 'assets/dishes/11.jpeg' },
-      { banner: 'assets/dishes/3.jpg' },
-      { banner: 'assets/dishes/cab.jpg' },
-    ];
+
     this.service.getRestaurant().subscribe((res) => {
       console.log(res);
       this.favorites = res;
@@ -53,5 +49,8 @@ export class OrdersPage implements OnInit, AfterContentChecked {
     this.restaurantConfig = {
       slidesPerView: 1.1,
     };
+  }
+  getCuisines(data) {
+    return data.join(', ');
   }
 }

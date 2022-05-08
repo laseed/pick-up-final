@@ -23,6 +23,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/tabs/tabs.module').then( m => m.TabsPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'cart',
+    /*resolve: {
+      special: DataResolverService
+    },*/
+    loadChildren: () => import('./pages/tabs/cart/cart.module').then( m => m.CartPageModule)
+  },
 ];
 
 @NgModule({
