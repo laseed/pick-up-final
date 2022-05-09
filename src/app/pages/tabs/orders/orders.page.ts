@@ -5,6 +5,7 @@ import { AfterContentChecked, Component, OnInit } from '@angular/core';
 // import Swiper core and required modules
 import SwiperCore, { SwiperOptions, Autoplay, Pagination } from 'swiper';
 import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination]);
 @Component({
@@ -23,7 +24,8 @@ export class OrdersPage implements OnInit, AfterContentChecked {
   constructor(private service: AuthService,
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
-    public toastController: ToastController) { }
+    public toastController: ToastController,
+    private router: Router,) { }
 
   ngOnInit() {
 
@@ -92,10 +94,12 @@ export class OrdersPage implements OnInit, AfterContentChecked {
 
         }
       },  {
-        text: 'View Order',
+        text: 'View Restaurant',
         icon: 'eye',
         handler: () => {
-          console.log('Play clicked');
+          console.log('Eye clicked');
+          this.viewRestaurant(order.rest);
+
         }
       }, {
         text: 'Cancel',
@@ -109,6 +113,15 @@ export class OrdersPage implements OnInit, AfterContentChecked {
     await actionSheet.present();
 
     const { role, data } = await actionSheet.onDidDismiss();
+  }
+  viewRestaurant(favorite) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        rest: favorite
+      }
+    };
+    this.router.navigate(['/', 'tabs', 'restaurants',favorite?.id], navigationExtras);
+
   }
   async presentToast() {
     const toast = await this.toastController.create({
