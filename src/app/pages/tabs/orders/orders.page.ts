@@ -4,6 +4,7 @@ import { AfterContentChecked, Component, OnInit } from '@angular/core';
 
 // import Swiper core and required modules
 import SwiperCore, { SwiperOptions, Autoplay, Pagination } from 'swiper';
+import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination]);
 @Component({
@@ -18,7 +19,11 @@ export class OrdersPage implements OnInit, AfterContentChecked {
   categoryConfig: SwiperOptions;
   restaurantConfig: SwiperOptions;
   orders = [];
-  constructor(private service: AuthService) {}
+  status: any[] = [];
+  constructor(private service: AuthService,
+    public actionSheetController: ActionSheetController,
+    public alertController: AlertController,
+    public toastController: ToastController) { }
 
   ngOnInit() {
 
@@ -30,7 +35,18 @@ export class OrdersPage implements OnInit, AfterContentChecked {
     this.service.getOrders().subscribe((res) => {
       console.log(res);
       this.orders = res;
+      this.service.getOrderStatuses().subscribe((res) => {
+        console.log(res);
+        this.status = res;
+        if(this.orders != []){
+          this.orders.forEach(e =>{
+            this.orders[this.orders.indexOf(e)].status = this.status.find(f => e.status_id == f.id).status;
+          });
+        }
+
+      });
     });
+
   }
   ngAfterContentChecked() {
     this.bannerConfig = {
@@ -52,5 +68,90 @@ export class OrdersPage implements OnInit, AfterContentChecked {
   }
   getCuisines(data) {
     return data.join(', ');
+  }
+
+  onClick(order) {
+
+
+  }
+  async presentActionSheet(order) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Pick',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          console.log('Delete clicked');
+          if(order.status_id == 3 ||  order.status_id == 4){
+            this.presentToast();
+          }else{
+            this.presentAlertConfirm(order);
+          }
+
+        }
+      },  {
+        text: 'View Order',
+        icon: 'eye',
+        handler: () => {
+          console.log('Play clicked');
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+
+    const { role, data } = await actionSheet.onDidDismiss();
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: "Cannot Delete This Order",
+      position: 'top',
+      duration: 2000
+    });
+    toast.present();
+  }
+  async presentAlertConfirm(order) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirm!',
+      message: "<strong>ARE YOU SURE YOU WANT TO CANCEL THIS ORDER ?</strong>",
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            this.service.cancelOrderById(order);
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  getColor(status_id){
+    if(status_id == 1){
+      return 'yellow';
+    }else if(status_id == 2){
+      return 'orange';
+    }else if(status_id == 3){
+      return 'green';
+    }else if(status_id == 4){
+      return 'red';
+    }
   }
 }

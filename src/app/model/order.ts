@@ -6,6 +6,8 @@ export class Order {
   user_id: string;
   id: string;
   rest: Restaurant;
+  status: string;
+  status_id:string;
 
 
 }

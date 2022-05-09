@@ -25,6 +25,7 @@ import { updateDoc } from 'firebase/firestore';
 import { Category } from 'src/app/model/category';
 import { Restaurant } from 'src/app/model/restaurant';
 import { Item } from 'src/app/model/item';
+import { Status } from 'src/app/model/status';
 
 export const user_key = 'maza_eats_user_id';
 
@@ -124,13 +125,19 @@ export class AuthService {
 
   getOrders(): Observable<Order[]> {
     const orderRef = collection(this._firestore, 'order');
-    return collectionData(orderRef, { idField: 'orderID' }) as Observable<
+    return collectionData(orderRef, { idField: 'id' }) as Observable<
       Order[]
+    >;
+  }
+  getOrderStatuses(): Observable<Status[]> {
+    const ref = collection(this._firestore, 'order_status');
+    return collectionData(ref, { idField: 'id' }) as Observable<
+      Status[]
     >;
   }
   getOrderById(id) {
 
-    return query(collection(this._firestore, 'order' ), where("user_id", "==", id));
+    return query(collection(this._firestore, 'order'), where("user_id", "==", id));
   }
   addOrder(order: Order) {
     const orderRef = doc(collection(this._firestore, 'order'));
@@ -138,7 +145,8 @@ export class AuthService {
       orderCost: order.orderCost,
       items: order.items,
       user_id: order.user_id,
-      rest: order.rest
+      rest: order.rest,
+      status_id: '1'
     });
   }
   deleteOrderById(order: Order) {
@@ -148,6 +156,11 @@ export class AuthService {
   updateOrderById(order: Order) {
     const orderRef = doc(this._firestore, 'order/' + order.id);
     return updateDoc(orderRef, { id: order.id, orderCost: order.orderCost });
+  }
+  cancelOrderById(order: Order) {
+    console.log(order);
+    const orderRef = doc(this._firestore, 'order/' + order.id);
+    return updateDoc(orderRef, { id: order.id, status_id: '4'});
   }
   search(name) {
     const ref = collection(this._firestore, "item");

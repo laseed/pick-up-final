@@ -14,12 +14,12 @@
       </ion-button>
     </ion-col>
   </ion-row>
-    <ion-item-group *ngFor="let order of orders">
+    <ion-item-group *ngFor="let order of orders" (click)="presentActionSheet(order)">
       <div>
         <img [src]="order.rest?.cover" />
       </div>
 
-      <ion-item lines="none">
+      <ion-item lines="none" >
         <ion-label class="ion-text-wrap">
           <ion-text>
             <strong>{{order.rest?.name}}</strong>
@@ -33,12 +33,13 @@
             <ion-col size="3">
               <ion-text>{{order.rest?.delivery_time}} mins</ion-text>
             </ion-col>
-            <ion-col size="2" class="rating">
-              <ion-text>{{order.rest?.rating}}</ion-text>
-              <ion-icon name="star" color="dark"></ion-icon>
+            <ion-col size="3" class="rating">
+              <ion-text>{{order.status}}</ion-text>
+              <ion-icon name="ellipse" [style]="{'color':getColor(order.status_id)}" ></ion-icon>
             </ion-col>
             <ion-col size="4">
-              <ion-text>{{order.rest?.price}} BD for two</ion-text>
+              <ion-text>{{order.orderCost}} BD</ion-text>
+              <ion-icon name="cash" color="dark" ></ion-icon>
             </ion-col>
           </ion-row>
           <!-- <p *ngIf="restaurant?.distance">
